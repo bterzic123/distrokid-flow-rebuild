@@ -1,0 +1,1186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+<title>Growth Audit — DistroKid</title>
+<link rel="icon" href="img/gremlin.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: only light;
+  /* ---- DistroKid, extracted from their live iOS screens ---- */
+  --dk-bg:#F2F2F4; --dk-card:#FFFFFF; --dk-line:#E3E5EA;
+  --dk-blue:#0267C1; --dk-blue-dk:#0152A0; --dk-blue-soft:#E8F1FB;
+  --dk-space:#050713; --dk-space2:#0B1230; --dk-lime:#C7DD16;
+  --dk-ocean:#024174; --dk-land:#139A72;
+  --dk-ink:#0E0F12; --dk-txt:#26292E; --dk-muted:#6B7079;
+  --dk-gold:#B4890F; --dk-gold-line:#E9D06A; --dk-gold-bg:#FFFBEA;
+  --dk-teal:#0F8275; --dk-teal-line:#86DCCD; --dk-teal-bg:#F2FCFA;
+  --dk-ult-a:#0D73BD; --dk-ult-b:#5BDAB1;
+  --r-ctl:8px; --r-media:12px;
+  /* ---- the report shell, in DistroKid's own palette ---- */
+  --bg:#F2F2F4; --bg2:#FFFFFF; --surf:#FFFFFF;
+  --hair:rgba(14,15,18,.09); --hair2:rgba(14,15,18,.16);
+  --ink:#0E0F12; --ink2:#41464E; --ink3:#7C818A;
+  --accent:#0267C1; --accent-lift:#0259A8;
+  --panel:#FFFFFF; --panel-ink:#111317; --panel-muted:#5F646D; --panel-line:#E8EAEE;
+  --accent-ink:#024E93;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);
+  font-family:'Lato',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 32px}
+@media(max-width:700px){.wrap{padding:0 20px}}
+
+/* ============ top bar ============ */
+.nav{position:sticky;top:0;z-index:70;background:rgba(242,242,244,.86);backdrop-filter:blur(18px) saturate(160%);
+  border-bottom:1px solid var(--hair)}
+.nav-in{max-width:1080px;margin:0 auto;padding:0 32px;height:58px;display:flex;align-items:center;gap:18px}
+@media(max-width:700px){.nav-in{padding:0 20px;gap:12px}}
+.nav-brand{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:700;letter-spacing:-.005em}
+.nav-brand .mk{width:28px;height:28px;flex:none;display:block;object-fit:contain}
+.nav-brand span{color:var(--ink2);font-weight:400}
+.nav-brand b{color:var(--ink);font-weight:700}
+.nav-links{margin-left:auto;display:flex;gap:2px;align-items:center}
+.nav-links button{padding:7px 14px;border-radius:8px;font-size:13px;font-weight:700;color:var(--ink3);transition:.16s}
+.nav-links button:hover{color:var(--ink)}
+.nav-links button.on{color:var(--ink);background:#fff;box-shadow:0 1px 4px rgba(14,15,18,.08)}
+@media(max-width:640px){.nav-brand span{display:none}}
+
+.view{display:none}
+.view.on{display:block}
+
+/* ============ hero ============ */
+.hero{padding:104px 0 0;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-340px;left:50%;transform:translateX(-50%);
+  width:1100px;height:640px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(2,103,193,.16),transparent 72%)}
+.hero::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(36% 46% at 8% 18%,rgba(199,221,22,.20),transparent 70%),
+   radial-gradient(36% 44% at 92% 20%,rgba(91,218,177,.22),transparent 70%)}
+.hero>*{position:relative;z-index:1}
+.eyebrow{font-size:11.5px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-lift);margin-bottom:26px}
+.hero h1{font-size:76px;line-height:.98;font-weight:900;letter-spacing:-.035em;margin:0 0 24px}
+@media(max-width:820px){.hero h1{font-size:50px}.hero{padding-top:70px}}
+.hero .lede{font-size:20px;line-height:1.5;font-weight:400;color:var(--ink2);max-width:600px;margin:0 auto;letter-spacing:-.006em}
+@media(max-width:820px){.hero .lede{font-size:17px}}
+.hero .meta{margin-top:30px;font-size:12.5px;color:var(--ink3);letter-spacing:.02em}
+.hero .meta b{color:var(--ink2);font-weight:700}
+
+.stats{display:flex;justify-content:center;gap:0;margin:70px auto 0;max-width:760px;
+  border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+.stat{flex:1;padding:26px 14px;text-align:center;border-left:1px solid var(--hair)}
+.stat:first-child{border-left:none}
+.stat b{display:block;font-size:26px;font-weight:900;letter-spacing:-.02em;color:var(--ink)}
+.stat span{display:block;font-size:11.5px;color:var(--ink3);margin-top:5px;line-height:1.35}
+@media(max-width:700px){.stat b{font-size:19px}.stat{padding:18px 8px}}
+
+.fb{max-width:760px;margin:0 auto;padding:30px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:26px;text-align:left}
+@media(max-width:700px){.fb{grid-template-columns:1fr;gap:20px;padding-top:24px}}
+.fb-k{grid-column:1/-1;font-size:10.5px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink3);text-align:center;margin-bottom:-6px}
+.fb-i{display:flex;gap:12px;align-items:flex-start}
+.fb-i .tick{width:18px;height:18px;flex:none;margin-top:3px;border-radius:50%;background:rgba(2,103,193,.13);
+  display:grid;place-items:center}
+.fb-i .tick svg{width:10px;height:10px;stroke:var(--accent-lift);stroke-width:3;fill:none;
+  stroke-linecap:round;stroke-linejoin:round}
+.fb-i p{font-size:14px;line-height:1.55;color:var(--ink2);margin:0}
+.fb-i p b{color:var(--ink);font-weight:700}
+
+.sec{padding:96px 0}
+.sec-k{font-size:11.5px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3);margin-bottom:18px}
+.sec h2{font-size:38px;line-height:1.14;font-weight:900;letter-spacing:-.028em;margin:0 0 20px;max-width:680px}
+@media(max-width:820px){.sec h2{font-size:29px}.sec{padding:64px 0}}
+.sec p.body{font-size:17px;line-height:1.66;color:var(--ink2);max-width:640px;margin:0 0 18px}
+.sec p.body b{color:var(--ink);font-weight:700}
+.rule{height:1px;background:var(--hair);margin:0}
+
+.notes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:40px;max-width:820px}
+@media(max-width:760px){.notes{grid-template-columns:1fr}}
+.note{background:var(--surf);border:1px solid var(--hair);box-shadow:0 2px 10px rgba(14,15,18,.04);border-radius:12px;padding:24px 26px}
+.note h4{font-size:15.5px;font-weight:900;letter-spacing:-.01em;margin:0 0 8px}
+.note p{font-size:14px;line-height:1.6;color:var(--ink2);margin:0}
+
+.ideas{display:flex;flex-direction:column;gap:0;margin-top:14px;border-top:1px solid var(--hair)}
+.idea{display:grid;grid-template-columns:52px 1fr 180px;gap:26px;align-items:start;
+  padding:30px 4px;border-bottom:1px solid var(--hair);text-align:left;width:100%;transition:.18s}
+.idea:hover{background:rgba(255,255,255,.7)}
+@media(max-width:780px){.idea{grid-template-columns:38px 1fr;gap:16px}}
+.idea .no{font-size:13px;font-weight:900;color:var(--ink3);padding-top:4px;letter-spacing:.02em}
+.idea h3{font-size:21px;line-height:1.25;font-weight:900;letter-spacing:-.018em;margin:0 0 7px}
+@media(max-width:820px){.idea h3{font-size:18px}}
+.idea p{font-size:14.5px;line-height:1.6;color:var(--ink2);margin:0;max-width:540px}
+.idea .out{text-align:right;padding-top:3px}
+@media(max-width:780px){.idea .out{grid-column:2;text-align:left;padding-top:12px}}
+.idea .out b{display:block;font-size:19px;font-weight:900;letter-spacing:-.015em;color:var(--accent-lift);white-space:nowrap}
+.idea .out span{display:block;font-size:10.5px;color:var(--ink3);margin-top:3px;letter-spacing:.04em;text-transform:uppercase;font-weight:700}
+.idea .seeit{display:inline-flex;align-items:center;gap:5px;margin-top:11px;font-size:12.5px;
+  font-weight:700;color:var(--accent-lift)}
+.idea .seeit svg{width:12px;height:12px}
+
+.band{background:var(--surf);border:1px solid var(--hair);border-radius:20px;box-shadow:0 2px 10px rgba(14,15,18,.04);padding:40px 44px;margin-top:44px;
+  display:flex;align-items:center;gap:36px;flex-wrap:wrap}
+@media(max-width:700px){.band{padding:28px 24px;gap:22px}}
+.band .lab{font-size:11.5px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px}
+.band .txt{flex:1;min-width:240px}
+.band .txt p{font-size:15.5px;line-height:1.6;color:var(--ink2);margin:0}
+.band .nums{display:flex;gap:34px}
+.band .nums div b{display:block;font-size:30px;font-weight:900;letter-spacing:-.025em;color:var(--accent-lift)}
+.band .nums div span{display:block;font-size:11px;color:var(--ink3);margin-top:2px;letter-spacing:.04em;
+  text-transform:uppercase;font-weight:700}
+
+.cta-row{display:flex;justify-content:center;margin-top:52px;align-items:center;gap:22px;flex-wrap:wrap}
+.bigbtn{display:inline-flex;align-items:center;gap:9px;background:var(--accent);color:#fff;
+  font-size:15px;font-weight:700;padding:15px 26px;border-radius:30px;transition:.16s}
+.bigbtn:hover{filter:brightness(1.1)}
+.bigbtn svg{width:15px;height:15px}
+
+.foot{border-top:1px solid var(--hair);padding:36px 0 70px;font-size:12.5px;line-height:1.6;color:var(--ink3)}
+
+/* ============ prototype stage ============ */
+.stage{display:grid;grid-template-columns:minmax(440px,1fr) minmax(400px,470px);gap:0;
+  align-items:start;min-height:calc(100vh - 58px)}
+@media(max-width:1080px){.stage{grid-template-columns:1fr}}
+.phonecol{padding:34px 24px 46px;display:flex;flex-direction:column;align-items:center;gap:18px}
+.panelcol{border-left:1px solid var(--hair);background:var(--panel);color:var(--panel-ink);
+  min-height:calc(100vh - 58px);position:sticky;top:58px;max-height:calc(100vh - 58px);overflow-y:auto}
+@media(max-width:1080px){.panelcol{position:static;max-height:none;border-left:none;border-top:1px solid var(--hair)}}
+
+.phone{position:relative;width:390px;height:844px;flex:none;background:#000;border:11px solid #000;
+  border-radius:46px;box-shadow:0 0 0 1.5px #D3D6DC,0 34px 70px -22px rgba(14,15,18,.35)}
+.phone-in{position:absolute;inset:0;border-radius:36px;overflow:hidden;background:var(--dk-bg);color-scheme:only light}
+.island{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:104px;height:30px;background:#000;
+  border-radius:16px;z-index:60;pointer-events:none}
+.sbar{position:absolute;top:0;left:0;right:0;height:50px;z-index:55;pointer-events:none;display:flex;
+  align-items:center;justify-content:space-between;padding:14px 28px 0 34px;font:700 15px/1 -apple-system,'Lato',sans-serif;color:#111;transition:color .3s}
+.sbar.light{color:#fff}
+.sbar .glyphs{display:flex;gap:5px;align-items:center}
+.homebar{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:134px;height:5px;
+  border-radius:3px;background:#111;z-index:56;pointer-events:none;transition:background .3s}
+.homebar.light{background:rgba(255,255,255,.9)}
+.screenwrap{position:absolute;inset:0;overflow:hidden;background:var(--dk-bg)}
+
+/* ============ phone screens — DistroKid's system, all prefixed scr-/dk- ============ */
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--dk-bg);color:var(--dk-ink);
+  font-family:'Lato',-apple-system,sans-serif;
+  transform:translateX(100%);transition:transform .36s cubic-bezier(.32,.72,0,1);z-index:10;will-change:transform}
+.scr.is-active{transform:translateX(0);z-index:20}
+.scr.is-past{transform:translateX(-24%)}
+.scr.sheet{transform:translateY(100%)}
+.scr.sheet.is-active{transform:translateY(0);z-index:30}
+.scr.nofx{transition:none}
+.scr-top{flex:none;position:relative;z-index:2}
+.scr-body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:0 20px;scrollbar-width:none;position:relative;z-index:2}
+.scr-body::-webkit-scrollbar{display:none}
+.scr-foot{flex:none;padding:12px 20px 30px;position:relative;z-index:2}
+
+/* their blue header bar: Back + centred title */
+.dk-bar{background:var(--dk-blue);color:#fff;padding:50px 12px 0;height:104px;display:flex;align-items:center;position:relative}
+.dk-bar .dk-back{display:flex;align-items:center;gap:2px;font:400 18px/1 'Lato',sans-serif;color:#fff;height:44px;padding:0 4px;position:relative;z-index:2}
+.dk-bar .dk-back svg{width:22px;height:22px}
+.dk-bar h1{position:absolute;left:0;right:0;bottom:15px;text-align:center;font:700 18px/1 'Lato',sans-serif;color:#fff;pointer-events:none}
+.dk-prog{height:4px;background:rgba(2,103,193,.16)}
+.dk-prog i{display:block;height:100%;background:var(--dk-lime);transition:width .4s cubic-bezier(.32,.72,0,1)}
+.dk-h{font:900 27px/1.15 'Lato',sans-serif;letter-spacing:-.01em;margin:24px 0 0;color:var(--dk-ink)}
+.dk-sub{font-size:15.5px;line-height:1.4;color:var(--dk-txt);margin:8px 0 0}
+
+/* buttons */
+.dk-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:54px;border-radius:var(--r-ctl);background:var(--dk-blue);color:#fff;
+  font:700 17px/1 'Lato',sans-serif;transition:filter .15s}
+.dk-btn svg{width:18px;height:18px}
+.dk-btn:hover{filter:brightness(1.07)}
+.dk-btn[disabled]{background:#A9C6E6;cursor:default}
+.dk-btn.ult{background:linear-gradient(90deg,var(--dk-ult-a),var(--dk-ult-b))}
+.dk-btn.ghostw{background:#fff;color:var(--dk-ink);border:1px solid #D8DBE0;font-weight:400}
+.dk-link{display:block;width:100%;height:40px;margin-top:4px;font:400 15px/1 'Lato',sans-serif;color:var(--dk-muted)}
+.dk-helper{font-size:13.5px;line-height:1.4;color:var(--dk-muted);text-align:center;margin:0 0 10px}
+.dk-helper b{color:var(--dk-ink);font-weight:700}
+
+/* space screens: welcome, loader, account */
+.scr--space{background:radial-gradient(120% 70% at 50% 0%,#0A1030,var(--dk-space) 70%)}
+.dk-stars{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.7;
+  background-image:radial-gradient(1.2px 1.2px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 32% 8%,#fff,transparent),
+   radial-gradient(1px 1px at 72% 14%,#fff,transparent),radial-gradient(1.4px 1.4px at 88% 30%,#fff,transparent),
+   radial-gradient(1px 1px at 8% 44%,#fff,transparent),radial-gradient(1px 1px at 52% 36%,#fff,transparent),
+   radial-gradient(1.2px 1.2px at 92% 56%,#fff,transparent),radial-gradient(1px 1px at 22% 66%,#fff,transparent),
+   radial-gradient(1px 1px at 64% 72%,#fff,transparent),radial-gradient(1px 1px at 40% 84%,#fff,transparent),
+   radial-gradient(1.2px 1.2px at 80% 80%,#fff,transparent),radial-gradient(1px 1px at 4% 90%,#fff,transparent)}
+.dk-earth{position:absolute;left:-20px;right:-20px;bottom:0;height:150px;z-index:1;pointer-events:none}
+.dk-earth svg{width:100%;height:100%;display:block}
+.scr--space .scr-body,.scr--space .scr-foot{background:transparent}
+.dk-mascot{display:block;width:84px;height:auto;margin:0 auto}
+.dk-word{font:900 28px/1 'Lato',sans-serif;letter-spacing:.06em;color:#fff;text-align:center;margin-top:14px}
+.dk-word span{font-weight:300}
+.dk-wh{font:700 33px/1.17 'Lato',sans-serif;color:#fff;text-align:center;margin:22px 0 0;letter-spacing:-.005em}
+.dk-out{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;height:54px;border-radius:var(--r-ctl);
+  border:1.5px solid #1D3A63;background:rgba(5,7,19,.55);color:#fff;font:700 17px/1 'Lato',sans-serif}
+.dk-out img{height:20px;display:block}
+.dk-out svg{height:19px;width:19px}
+.dk-outs{display:flex;flex-direction:column;gap:12px}
+.dk-proof{display:flex;justify-content:center;align-items:center;gap:9px;margin-top:18px;color:rgba(255,255,255,.78);font-size:13.5px}
+.dk-proof b{color:#fff;font-weight:700}
+.dk-proof i{width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,.5)}
+.dk-star{color:var(--dk-lime)}
+
+/* answer cards — their white plan-card surface, their line icons */
+.dk-opts{display:flex;flex-direction:column;gap:12px;margin-top:24px;padding-bottom:12px}
+.dk-opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:#fff;border:2px solid transparent;
+  border-radius:var(--r-media);padding:16px 16px;font:400 17px/1.3 'Lato',sans-serif;color:var(--dk-txt);transition:.16s;
+  box-shadow:0 1px 6px rgba(14,15,18,.06)}
+.dk-opt b{display:block;font-weight:700;color:var(--dk-ink)}
+.dk-opt small{display:block;font-size:13.5px;color:var(--dk-muted);margin-top:2px}
+.dk-opt .ic{width:28px;height:28px;flex:none;color:var(--dk-blue);display:grid;place-items:center}
+.dk-opt .ic svg{width:24px;height:24px}
+.dk-opt .rd{margin-left:auto;width:24px;height:24px;flex:none;border-radius:50%;border:2px solid #C9CDD4;display:grid;place-items:center;transition:.16s}
+.dk-opt .rd svg{width:13px;height:13px;stroke:#fff;stroke-width:3.2;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+.dk-opt.multi .rd{border-radius:6px}
+#wantList{gap:7px;margin-top:14px;padding-bottom:4px}
+#wantList .dk-opt{padding:10px 14px;font-size:15.5px}
+.dk-opt.on{border-color:var(--dk-blue);background:var(--dk-blue-soft)}
+.dk-opt.on .rd{background:var(--dk-blue);border-color:var(--dk-blue)}
+.dk-opt.on .rd svg{opacity:1}
+.dk-tag{margin-left:auto;font:900 10.5px/1 'Lato',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--dk-muted);white-space:nowrap}
+
+/* loader */
+.dk-loadwrap{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding-bottom:110px}
+.dk-bob{width:92px;animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-10px) rotate(-4deg)}}
+.dk-load-h{font:700 24px/1.2 'Lato',sans-serif;color:#fff;text-align:center;margin:20px 0 20px}
+.dk-lsteps{width:100%;max-width:300px;display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
+.dk-ls{display:flex;align-items:center;gap:11px;font-size:15.5px;color:rgba(255,255,255,.5);transition:.35s}
+.dk-ls.on{color:#fff}
+.dk-ls .d{width:22px;height:22px;flex:none;border-radius:50%;border:2px solid rgba(255,255,255,.35);display:grid;place-items:center;transition:.35s}
+.dk-ls.on .d{background:var(--dk-lime);border-color:var(--dk-lime)}
+.dk-ls .d svg{width:12px;height:12px;stroke:var(--dk-space);stroke-width:3.4;fill:none;opacity:0;stroke-linecap:round;stroke-linejoin:round}
+.dk-ls.on .d svg{opacity:1}
+.dk-fact{width:100%;max-width:310px;border:1.5px solid #1D3A63;background:rgba(5,7,19,.55);border-radius:var(--r-media);padding:15px 16px;min-height:76px;text-align:center}
+.dk-fact b{display:block;font:900 22px/1.1 'Lato',sans-serif;color:var(--dk-lime)}
+.dk-fact span{display:block;font-size:14px;color:#fff;margin-top:5px;line-height:1.35}
+
+/* plan card — their card, verbatim */
+.dk-card{position:relative;background:#fff;border-radius:var(--r-media);padding:20px 18px 18px;box-shadow:0 1px 6px rgba(14,15,18,.06);border:2px solid transparent;transition:border-color .16s;width:100%;text-align:left;display:block}
+.dk-card.sel{border-color:var(--dk-blue)}
+.dk-badge{display:inline-block;font:900 12px/1 'Lato',sans-serif;letter-spacing:.04em;text-transform:uppercase;border-radius:20px;padding:6px 11px;margin-bottom:10px;border:1.5px solid}
+.dk-badge.gold{color:var(--dk-gold);border-color:var(--dk-gold-line);background:var(--dk-gold-bg)}
+.dk-badge.teal{color:var(--dk-teal);border-color:var(--dk-teal-line);background:var(--dk-teal-bg)}
+.dk-badge.blue{color:#fff;border-color:var(--dk-blue);background:var(--dk-blue)}
+.dk-pname{font:900 38px/1.05 'Lato',sans-serif;letter-spacing:-.01em;color:var(--dk-ink)}
+.dk-price{font:900 20px/1.2 'Lato',sans-serif;color:var(--dk-ink);margin-top:4px}
+.dk-like{font-size:15px;color:var(--dk-txt);margin-top:3px}
+.dk-feats{display:flex;flex-direction:column;gap:9px;margin-top:14px}
+.dk-f{display:flex;align-items:center;gap:12px;font-size:16px;line-height:1.25;color:var(--dk-txt)}
+.dk-f b{font-weight:700;color:var(--dk-ink)}
+.dk-f .fi{width:22px;height:22px;flex:none;color:var(--dk-blue);display:grid;place-items:center}
+.dk-f .fi svg{width:20px;height:20px}
+.dk-f.hit{color:var(--dk-ink);font-weight:700}
+.dk-f .you{margin-left:auto;flex:none;font:900 10px/1 'Lato',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--dk-blue);background:var(--dk-blue-soft);border-radius:10px;padding:4px 7px}
+.dk-more{display:inline-flex;align-items:center;gap:4px;margin-top:10px;font:700 14px/1 'Lato',sans-serif;color:var(--dk-blue)}
+
+/* payoff */
+.dk-match{margin-top:12px}
+[data-id=payoff] .dk-h{font-size:25px;margin-top:18px}
+[data-id=payoff] .dk-pname{font-size:32px}
+[data-id=payoff] .dk-feats,.scr--pay .dk-feats{gap:5px;margin-top:9px}
+.scr--pay .dk-f .you{padding:3px 5px;font-size:9px}
+.scr--pay .dk-f{font-size:14.5px;gap:10px}
+[data-id=payoff] .dk-f,.scr--pay .dk-f{font-size:15px}
+[data-id=payoff] .dk-card{padding:16px 16px 14px}
+.dk-stepper{display:flex;align-items:center;justify-content:space-between;background:#fff;border-radius:var(--r-media);padding:10px 12px 10px 16px;margin-top:12px;box-shadow:0 1px 6px rgba(14,15,18,.06)}
+.dk-stepper small{display:block;font:900 11px/1 'Lato',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--dk-muted)}
+.dk-stepper b{display:block;font:900 18px/1.2 'Lato',sans-serif;color:var(--dk-ink);margin-top:4px}
+.dk-stepper .pm{display:flex;gap:8px}
+.dk-stepper .pm button{width:38px;height:38px;border-radius:var(--r-ctl);background:var(--dk-blue-soft);color:var(--dk-blue);font:900 20px/1 'Lato',sans-serif}
+
+/* paywall */
+.scr--pay .scr-body{padding:0 16px}
+.dk-ptop{padding:12px 2px 0}
+.dk-pproof{display:flex;align-items:center;justify-content:center;gap:9px;background:#fff;border-radius:var(--r-media);padding:7px 12px;font-size:13.5px;color:var(--dk-txt);box-shadow:0 1px 6px rgba(14,15,18,.06)}
+.dk-pproof b{color:var(--dk-ink);font-weight:900}
+.dk-pproof i{width:1px;height:16px;background:var(--dk-line)}
+.dk-stars5{color:#F2B705;letter-spacing:1px;font-size:13px}
+.dk-payh{font:900 21px/1.2 'Lato',sans-serif;color:var(--dk-ink);margin:12px 2px 0;letter-spacing:-.005em}
+.dk-paysub{font-size:15px;color:var(--dk-txt);margin:6px 2px 0}
+.dk-plans{display:flex;flex-direction:column;gap:10px;margin:12px 0 4px}
+.scr--pay .dk-card.sel{padding:14px 16px 14px}
+.scr--pay .dk-card.sel .dk-pname{font-size:30px}
+.scr--pay .dk-card.sel .dk-price{font-size:18px}
+.dk-card.mini .dk-feats,.dk-card.mini .dk-more{display:none}
+.scr--pay .dk-plans{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.scr--pay .dk-card.sel{grid-column:1/-1}
+.dk-card.mini{padding:12px 12px 12px 14px}
+.dk-card.mini .dk-badge{margin-bottom:6px;font-size:10px;padding:4px 8px}
+.dk-card.mini .dk-pname{font-size:22px}
+.dk-card.mini .dk-price{font-size:15px;margin-top:2px}
+.dk-card.mini .dk-like{font-size:12px;white-space:nowrap;letter-spacing:-.01em}
+.dk-card.mini .rd{top:12px;right:10px;width:22px;height:22px}
+.dk-card.mini .rd i{width:8px;height:8px}
+.dk-card .rd{position:absolute;right:16px;top:18px;width:26px;height:26px;border-radius:50%;border:2px solid #C9CDD4;display:grid;place-items:center}
+.dk-card .rd i{width:10px;height:10px;border-radius:50%;background:#fff;opacity:0}
+.dk-card.sel .rd{background:var(--dk-blue);border-color:var(--dk-blue)}
+.dk-card.sel .rd i{opacity:1}
+.scr--pay .scr-foot{padding:10px 20px 26px;background:var(--dk-bg);border-top:1px solid var(--dk-line)}
+.dk-legal{display:flex;justify-content:center;gap:18px;margin-top:10px}
+.dk-legal a{font-size:12px;color:var(--dk-muted);text-decoration:none}
+
+/* offer — a comparison-led downsell sheet */
+.scr--offer{background:var(--dk-bg);border-radius:0}
+.dk-ohead{background:var(--dk-blue);padding:52px 20px 18px;text-align:center;position:relative;color:#fff}
+.dk-ohead img{width:50px;display:block;margin:0 auto}
+.dk-ohead h2{font:900 24px/1.15 'Lato',sans-serif;margin-top:8px}
+.dk-ohead p{font-size:15px;line-height:1.4;margin-top:6px;color:rgba(255,255,255,.88)}
+.dk-x{position:absolute;right:14px;top:52px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;color:#fff}
+.dk-x svg{width:18px;height:18px}
+.dk-cmp{background:#fff;border-radius:var(--r-media);margin-top:16px;box-shadow:0 1px 6px rgba(14,15,18,.06);overflow:hidden}
+.dk-cmp table{width:100%;border-collapse:collapse;font-size:14px}
+.dk-cmp th{font:900 13px/1.2 'Lato',sans-serif;color:var(--dk-ink);padding:12px 6px;text-align:center;border-bottom:1px solid var(--dk-line)}
+.dk-cmp th:first-child{text-align:left;padding-left:14px;color:var(--dk-muted);font-weight:700}
+.dk-cmp th.hl{background:var(--dk-blue-soft);color:var(--dk-blue)}
+.dk-cmp td{padding:8px 6px;text-align:center;border-bottom:1px solid #F0F1F4;color:var(--dk-txt)}
+.dk-cmp td:first-child{text-align:left;padding-left:14px}
+.dk-cmp td.hl{background:var(--dk-blue-soft)}
+.dk-cmp tr:last-child td{border-bottom:none}
+.dk-y{color:var(--dk-blue);font-weight:900}
+.dk-n{color:#B4B8C0}
+.dk-oprice{display:inline-flex;align-items:baseline;gap:8px;margin-top:12px;background:#fff;border-radius:20px;padding:8px 14px}
+.dk-oprice b{font:900 18px/1 'Lato',sans-serif;color:var(--dk-ink)}
+.dk-oprice span{font-size:13.5px;color:var(--dk-txt)}
+
+/* notifications — their prompt card, verbatim */
+.dk-ncard{background:#fff;border-radius:var(--r-media);padding:28px 18px 18px;margin-top:22px;box-shadow:0 1px 6px rgba(14,15,18,.06)}
+.dk-ncard h2{font:900 30px/1.12 'Lato',sans-serif;text-align:center;color:var(--dk-ink)}
+.dk-nstack{display:flex;flex-direction:column;gap:6px;margin:22px 0 4px}
+.dk-n1{display:flex;align-items:center;gap:12px;background:#fff;border-radius:8px;padding:10px 12px;box-shadow:0 2px 10px rgba(14,15,18,.13);font-size:15px;line-height:1.3;color:var(--dk-txt)}
+.dk-n1:nth-child(2){margin-left:12px;margin-right:-4px}
+.dk-n1 img{width:38px;height:38px;border-radius:6px;flex:none}
+.dk-n1 span{flex:1}
+.dk-n1 svg{width:24px;height:24px;flex:none}
+.dk-ok{display:flex;align-items:center;gap:10px;justify-content:center;margin-top:22px;font-size:15px;color:var(--dk-txt)}
+.dk-ok b{color:var(--dk-ink)}
+.dk-ok .c{width:26px;height:26px;border-radius:50%;background:#1DB954;display:grid;place-items:center}
+.dk-ok .c svg{width:14px;height:14px;stroke:#fff;stroke-width:3.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.dk-saved{display:inline-block;margin:20px auto 0;padding:8px 14px;border-radius:20px;background:rgba(199,221,22,.14);border:1px solid rgba(199,221,22,.5);color:#fff;font-size:14px}
+.dk-saved b{color:var(--dk-lime)}
+
+/* dark mode — an approximation: no dark frames of their light screens were supplied */
+.phone-in.dark{--dk-bg:#0B0E17;--dk-card:#161B27;--dk-line:#262D3B;--dk-blue-soft:#11284A;--dk-ink:#F2F4F7;--dk-txt:#BCC2CC;--dk-muted:#848B96;
+  --dk-gold-bg:#2A2410;--dk-teal-bg:#0E2724;background:var(--dk-bg)}
+.phone-in.dark .screenwrap{background:var(--dk-bg)}
+.phone-in.dark .dk-bar{background:#0A3F75}
+.phone-in.dark .dk-ohead{background:#0A3F75}
+.phone-in.dark .dk-opt,.phone-in.dark .dk-card,.phone-in.dark .dk-stepper,.phone-in.dark .dk-pproof,.phone-in.dark .dk-cmp,
+.phone-in.dark .dk-ncard,.phone-in.dark .dk-n1{background:var(--dk-card);box-shadow:none}
+.phone-in.dark .dk-n1{background:#1F2533}
+.phone-in.dark .dk-opt.on{background:var(--dk-blue-soft)}
+.phone-in.dark .dk-card.sel{border-color:#3C8FE0}
+.phone-in.dark .dk-opt.on,.phone-in.dark .dk-opt.on .rd{border-color:#3C8FE0}
+.phone-in.dark .dk-opt:not(.on) .rd,.phone-in.dark .dk-card:not(.sel) .rd{border-color:#3A4252}
+.phone-in.dark .dk-opt .ic,.phone-in.dark .dk-f .fi,.phone-in.dark .dk-more,.phone-in.dark .dk-y,.phone-in.dark .dk-cmp th.hl,
+.phone-in.dark .dk-f .you,.phone-in.dark .dk-stepper .pm button{color:#5AA6EE}
+.phone-in.dark .dk-cmp td{border-color:#1E2430}
+.phone-in.dark .dk-btn.ghostw{background:var(--dk-card);color:var(--dk-ink);border-color:#2E3545}
+.phone-in.dark .dk-btn[disabled]{background:#1C3554;color:#7F95B0}
+.phone-in.dark .dk-prog{background:rgba(255,255,255,.08)}
+.phone-in.dark .dk-n{color:#4A5162}
+.phone-in.dark .dk-oprice{background:var(--dk-card)}
+.phone-in.dark .scr--pay .scr-foot{border-color:var(--dk-line)}
+
+/* prototype toolbar, walkthrough, QR */
+.tools{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:520px}
+.seg{display:inline-flex;align-items:center;background:#fff;border:1px solid #DFE2E7;border-radius:20px;padding:3px;gap:2px}
+.seg button{padding:6px 11px;border-radius:16px;font:700 12px/1 'Lato',sans-serif;color:var(--ink2);transition:.14s}
+.seg button.on{background:var(--ink);color:#fff}
+.demo-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:20px;background:var(--accent);color:#fff;
+  font:700 12px/1 'Lato',sans-serif}
+.demo-cap{width:390px;max-width:calc(100vw - 24px);background:#fff;border:1px solid var(--hair);border-radius:14px;padding:14px 14px 12px;
+  display:flex;align-items:center;gap:12px;position:relative;overflow:hidden;box-shadow:0 4px 18px rgba(14,15,18,.07)}
+.demo-cap .bar{position:absolute;left:0;top:0;right:0;height:3px;background:#EDEFF2}
+.demo-cap .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s linear}
+.demo-cap p{flex:1;font-size:13.5px;line-height:1.45;color:var(--ink);margin:0}
+.demo-cap button{font:700 12px/1 'Lato',sans-serif;color:var(--ink2);padding:7px 10px;border-radius:10px;border:1px solid #DFE2E7;flex:none}
+.finger{position:absolute;z-index:90;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:rgba(14,15,18,.26);
+  border:2px solid rgba(255,255,255,.95);box-shadow:0 4px 14px rgba(0,0,0,.25);pointer-events:none;opacity:0;left:50%;top:60%;
+  transition:left .32s cubic-bezier(.4,0,.2,1),top .32s cubic-bezier(.4,0,.2,1),opacity .2s,transform .15s}
+.finger.show{opacity:1}
+.finger.press{transform:scale(.78);background:rgba(14,15,18,.4)}
+.qr{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--hair);border-radius:14px;padding:10px 16px 10px 10px;text-align:left}
+.qr img{width:135px;height:135px;display:block;image-rendering:pixelated;border-radius:6px}
+.qr span{font-size:12.5px;line-height:1.45;color:var(--ink2)}
+.qr b{display:block;color:var(--ink);font-size:13.5px}
+@media(max-width:1080px){.qr{display:none}}
+
+#view-proto .tools{order:0} #view-proto .demo-cap{order:1} #view-proto .phone{order:2} #view-proto .chips{order:3}
+#view-proto .chiphint{order:4} #view-proto .qr{order:5}
+.cta-row .qr{order:2}
+/* on a phone: the prototype is the screen */
+@media(max-width:500px){
+  #view-proto .phonecol{padding:0 0 28px;gap:14px}
+  #view-proto .phone{width:100vw;height:calc(100svh - 58px);min-height:640px;border:0;border-radius:0;box-shadow:none;order:1}
+  #view-proto .phone-in{border-radius:0}
+  #view-proto .island,#view-proto .sbar,#view-proto .homebar{display:none}
+  #view-proto .dk-bar{padding-top:6px;height:58px}
+  #view-proto .dk-ohead{padding-top:22px}
+  #view-proto .dk-x{top:14px}
+  #view-proto .scr-foot{padding-bottom:18px}
+  #view-proto .scr--pay .scr-foot{padding-bottom:16px}
+  #view-proto .space-top{height:24px !important}
+  #view-proto .tools{order:3;padding:0 12px}
+  #view-proto .demo-cap{position:fixed;left:12px;right:12px;bottom:12px;width:auto;max-width:none;z-index:95}
+  #view-proto .chips{order:4;padding:0 12px}
+  #view-proto .chiphint{order:5}
+}
+
+/* overview: walkthrough button */
+.herobtns{display:flex;justify-content:center;margin-top:30px}
+.ghostbtn{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--hair2);color:var(--ink);font-size:14px;
+  font-weight:700;padding:9px 20px 9px 9px;border-radius:30px;box-shadow:0 2px 12px rgba(14,15,18,.06);transition:.16s}
+.ghostbtn:hover{box-shadow:0 4px 18px rgba(14,15,18,.1)}
+.ghostbtn .pl{width:30px;height:30px;border-radius:50%;background:var(--accent);display:grid;place-items:center}
+.ghostbtn .pl svg{width:12px;height:12px;fill:#fff;margin-left:2px}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:470px;margin:0 auto}
+.chip{padding:7px 13px;border-radius:20px;border:1px solid #DFE2E7;background:#fff;
+  font:700 12px/1 'Lato',sans-serif;color:var(--ink2);transition:.14s}
+.chip:hover{color:var(--ink);border-color:#C5CAD1}
+.chip.offer{border-style:dashed;border-color:var(--accent);color:var(--accent-lift)}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff;border-style:solid}
+.chiphint{text-align:center;font-size:11px;color:var(--ink3);margin:0;max-width:430px}
+
+/* ============ the short panel ============ */
+.pn{padding:30px 30px 60px}
+.pn-n{font-size:10.5px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink)}
+.pn-n.ctx{color:var(--panel-muted)}
+.pn-t{font-size:23px;line-height:1.18;font-weight:900;letter-spacing:-.018em;margin:8px 0 0;color:var(--panel-ink)}
+.pn-hyp{font-size:15px;line-height:1.62;color:#2E3238;margin:16px 0 0}
+.pn-hyp b{font-weight:700;color:var(--panel-ink)}
+.pn-out{margin-top:22px;border-top:1px solid var(--panel-line);padding-top:18px}
+.pn-out .lab{font-size:10px;font-weight:900;letter-spacing:.13em;text-transform:uppercase;color:var(--panel-muted)}
+.pn-out .v{font-size:31px;font-weight:900;letter-spacing:-.025em;color:var(--accent-ink);margin-top:7px;line-height:1}
+.pn-kept{margin-top:22px;font-size:12.5px;line-height:1.55;color:var(--panel-muted)}
+.pn-kept b{color:#2E3238;font-weight:700}
+.pn-foot{font-size:11.5px;line-height:1.55;color:var(--panel-muted);border-top:1px solid var(--panel-line);
+  padding-top:14px;margin-top:26px}
+.pn-sep{height:1px;background:var(--panel-line);margin:26px 0}
+.hidden{display:none !important}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-in">
+    <div class="nav-brand">
+      <img class="mk" src="img/gremlin.png" alt="DistroKid">
+      <b>Growth Audit</b><span>· DistroKid</span>
+    </div>
+    <div class="nav-links">
+      <button class="on" data-view="over">Overview</button>
+      <button data-view="proto">Prototype</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= OVERVIEW ======================= -->
+<div class="view on" id="view-over">
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Growth Audit · November 2026</div>
+    <h1>DistroKid</h1>
+    <p class="lede">Five ideas to unlock more revenue from the traffic you already have.</p>
+    <div class="meta">Prepared by <b>Adapty</b> · based on your live iOS flow and your App Store listing</div>
+    <div class="herobtns"><button class="ghostbtn" data-demo><span class="pl"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z"/></svg></span>Watch the 30-second walkthrough</button></div>
+    <div class="stats">
+      <div class="stat"><b>30,000+</b><span>apps run subscriptions<br>on Adapty</span></div>
+      <div class="stat"><b>5</b><span>ideas, each rebuilt<br>as a working screen</span></div>
+      <div class="stat"><b>0</b><span>design changes<br>to your art direction</span></div>
+    </div>
+
+    <div class="fb">
+      <div class="fb-k">Built in Adapty Flow Builder</div>
+      <div class="fb-i">
+        <span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+        <p><b>Millions of dollars</b> in subscription revenue pass through Flow Builder every month.</p>
+      </div>
+      <div class="fb-i">
+        <span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+        <p><b>Nearly 500 apps</b> actively build their paywalls and onboarding in it — plenty of them past $100K MRR.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="wrap">
+    <div class="sec-k">What this is</div>
+    <h2>We opened DistroKid the way a new artist does, then rebuilt the parts we think are leaving money on the table.</h2>
+    <p class="body">Adapty powers subscriptions for <b>30,000+ apps</b>, so we get to see what actually moves conversion and ARPU across the market rather than inside one app. We pointed that at DistroKid: installed the iPhone app, signed up as a new artist, read your App Store listing and your plans page, and looked for gaps between what you already have and what you currently show people.</p>
+    <p class="body">What follows is five ideas — not fifteen. Each one is a hypothesis you can A/B test, and each one is built into a clickable prototype so you can see it rather than imagine it. <b>The prototype uses your design, not ours.</b></p>
+
+    <div class="notes">
+      <div class="note">
+        <h4>We did not redesign your app</h4>
+        <p>Every screen in the prototype is yours: the space welcome with the gremlin and the earth, your blue header bar, your plan cards with their badges and icons, the Ultimate gradient button, your notification prompt. Only the order changed, plus a few things you already own but do not show at the right moment.</p>
+      </div>
+      <div class="note">
+        <h4>You may have tested some of this</h4>
+        <p>We are working from the outside, so we cannot see your experiment history. If one of these is something you have already run, tell us — we will go deeper on the rest rather than repeat it.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="rule"></div>
+
+<div class="sec">
+  <div class="wrap">
+    <div class="sec-k">The five ideas</div>
+    <h2>Ranked by what we would test first.</h2>
+    <p class="body">Each one links straight to the screen in the prototype.</p>
+
+    <div class="ideas">
+      <button class="idea" data-jump="welcome">
+        <span class="no">01</span>
+        <span>
+          <h3>Move sign-up behind the paywall</h3>
+          <p>Today the first screen asks for Google, Apple or email, then a six-digit code from your inbox, before a new artist has seen a single plan. Let them reach the plans first and create the account once they have chosen one.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>CR +8%</b><span>ARPU +17%</span></span>
+      </button>
+
+      <button class="idea" data-jump="notify">
+        <span class="no">02</span>
+        <span>
+          <h3>Ask for notifications after the purchase</h3>
+          <p>“Don’t miss the important stuff” opens on top of Choose Your Plan, covering the Musician and Musician+ cards at the exact moment someone is comparing them. It is a good prompt. It just belongs after they have bought.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>CR +10–15%</b><span>to purchase</span></span>
+      </button>
+
+      <button class="idea" data-jump="paywall">
+        <span class="no">03</span>
+        <span>
+          <h3>Open the plans on their release and your 4.9</h3>
+          <p>Choose Your Plan shows three equal cards and 18 feature lines to everyone. Your 4.9 from 27K ratings and the 4 million artists in your App Store listing appear nowhere in the flow. Lead with the plan that fits them, named for what they are releasing.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>CR +15–20%</b><span>to purchase</span></span>
+      </button>
+
+      <button class="idea" data-jump="payoff">
+        <span class="no">04</span>
+        <span>
+          <h3>Let three taps pick the plan</h3>
+          <p>Your plans already differ on the things an artist knows about themselves: how many artists, whether they want daily stats or their own release date. Ask those three things and show which card they point to before the price, so nobody has to read all 18 lines.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>CR +10–15%</b><span>to purchase</span></span>
+      </button>
+
+      <button class="idea" data-jump="offer">
+        <span class="no">05</span>
+        <span>
+          <h3>Offer Musician when they leave Musician+</h3>
+          <p>Tapping Back on Choose Your Plan just ends the visit. Musician at 29,99 € a year is already in your store, so someone walking away from 49,99 € or 99,99 € can still leave with a plan — no discount needed.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>ARPU +10–15%</b><span>second chance</span></span>
+      </button>
+    </div>
+
+    <div class="band">
+      <div class="txt">
+        <div class="lab">Potential outcome</div>
+        <p>Run together, these five move the same funnel at three points — what stands before the plans, what the plans say, and what happens when someone says no.</p>
+      </div>
+      <div class="nums">
+        <div><b>+25%</b><span>CR to purchase</span></div>
+        <div><b>+30%</b><span>ARPU</span></div>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <div class="qr"><img src="img/qr.svg?v=1" alt="QR code for the prototype"><span><b>Or open it on your phone</b>Scan to try the flow in your hand.</span></div>
+      <button class="bigbtn" data-view="proto">Open the prototype
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="foot">
+  <div class="wrap">
+    Impact ranges are Adapty's expected effect from teardowns and A/B tests across subscription apps — not measured lift for DistroKid. Every price, rating, plan line and claim here and in the prototype comes from DistroKid's own App Store listing, plans page and in-app screens.
+  </div>
+</div>
+</div><!-- /view-over -->
+
+<!-- ======================= PROTOTYPE ======================= -->
+<div class="view" id="view-proto">
+<div class="stage">
+  <div class="phonecol">
+    <div class="tools" id="tools">
+      <div class="seg" id="segTheme"><button data-theme="light" class="on">Light</button><button data-theme="dark">Dark</button></div>
+      <button class="demo-btn" id="demoBtn"><svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor"><path d="M7 4.5v15l12-7.5z"/></svg>30-sec walkthrough</button>
+    </div>
+    <div class="phone">
+      <div class="phone-in" id="phoneIn">
+        <div class="island"></div>
+        <div class="sbar" id="sbar">
+          <span>9:41</span>
+          <span class="glyphs">
+            <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7.5" width="3" height="3.5" rx="1"/><rect x="4.5" y="5.5" width="3" height="5.5" rx="1"/><rect x="9" y="3" width="3" height="8" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+            <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor"><path d="M8 10.5 5.6 7.9a3.4 3.4 0 0 1 4.8 0L8 10.5Zm0-5.6a6.4 6.4 0 0 0-4.5 1.9L1.7 4.9a9 9 0 0 1 12.6 0l-1.8 1.9A6.4 6.4 0 0 0 8 4.9Z"/></svg>
+            <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".6" y=".6" width="20" height="10.8" rx="3" stroke="currentColor" stroke-opacity=".5"/><rect x="2.2" y="2.2" width="16.5" height="7.6" rx="1.8" fill="currentColor"/><path d="M22.3 4.1v3.8a2 2 0 0 0 0-3.8Z" fill="currentColor" fill-opacity=".5"/></svg>
+          </span>
+        </div>
+        <div class="homebar" id="homebar"></div>
+        <div class="finger" id="finger"></div>
+        <div class="screenwrap">
+
+<!-- WELCOME -->
+<section class="scr scr--space" data-id="welcome" data-light="1">
+  <div class="dk-stars"></div>
+  <div class="dk-earth" data-earth></div>
+  <div class="scr-top space-top" style="height:120px"></div>
+  <div class="scr-body">
+    <img class="dk-mascot" src="img/gremlin.png" alt="">
+    <div class="dk-word">DISTRO<span>KID</span></div>
+    <h2 class="dk-wh">Release your music<br>to the world</h2>
+  </div>
+  <div class="scr-foot" style="padding-bottom:150px">
+    <button class="dk-btn" id="welGo" data-go="artists">Get started</button>
+    <div style="height:12px"></div>
+    <button class="dk-out" data-go="account">Log in</button>
+  </div>
+</section>
+
+<!-- Q1 ARTISTS -->
+<section class="scr" data-id="artists">
+  <div class="scr-top">
+    <div class="dk-bar"><button class="dk-back" data-back><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Back</button><h1>Find your plan</h1></div>
+    <div class="dk-prog"><i style="width:33%"></i></div>
+  </div>
+  <div class="scr-body">
+    <h2 class="dk-h">Who are you releasing music for?</h2>
+    <div class="dk-opts" id="artList"></div>
+  </div>
+  <div class="scr-foot"><button class="dk-btn" id="artBtn" data-go="release">Continue</button></div>
+</section>
+
+<!-- Q2 RELEASE -->
+<section class="scr" data-id="release">
+  <div class="scr-top">
+    <div class="dk-bar"><button class="dk-back" data-back><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Back</button><h1>Find your plan</h1></div>
+    <div class="dk-prog"><i style="width:66%"></i></div>
+  </div>
+  <div class="scr-body">
+    <h2 class="dk-h">What are you putting out first?</h2>
+    <p class="dk-sub">Every plan uploads unlimited songs. This just helps us set things up.</p>
+    <div class="dk-opts" id="relList"></div>
+  </div>
+  <div class="scr-foot"><button class="dk-btn" data-go="wants">Continue</button></div>
+</section>
+
+<!-- Q3 WANTS -->
+<section class="scr" data-id="wants">
+  <div class="scr-top">
+    <div class="dk-bar"><button class="dk-back" data-back><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Back</button><h1>Find your plan</h1></div>
+    <div class="dk-prog"><i style="width:100%"></i></div>
+  </div>
+  <div class="scr-body">
+    <h2 class="dk-h" id="wantH"></h2>
+    <p class="dk-sub">Pick any. Skip if you are not sure yet.</p>
+    <div class="dk-opts" id="wantList"></div>
+  </div>
+  <div class="scr-foot">
+    <p class="dk-helper" id="wantHelp"></p>
+    <button class="dk-btn" data-go="loader">Show my plan</button>
+  </div>
+</section>
+
+<!-- LOADER -->
+<section class="scr scr--space" data-id="loader" data-light="1">
+  <div class="dk-stars"></div>
+  <div class="dk-earth" data-earth></div>
+  <div class="scr-top"></div>
+  <div class="scr-body">
+    <div class="dk-loadwrap">
+      <img class="dk-bob" src="img/gremlin.png" alt="">
+      <h2 class="dk-load-h">Matching you to a plan</h2>
+      <div class="dk-lsteps" id="loadSteps">
+        <div class="dk-ls"><span class="d"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t">—</span></div>
+        <div class="dk-ls"><span class="d"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t">—</span></div>
+        <div class="dk-ls"><span class="d"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t">—</span></div>
+      </div>
+      <div class="dk-fact"><b id="fBig">—</b><span id="fTxt">—</span></div>
+    </div>
+  </div>
+  <div class="scr-foot"></div>
+</section>
+
+<!-- PAYOFF -->
+<section class="scr" data-id="payoff">
+  <div class="scr-top">
+    <div class="dk-bar"><button class="dk-back" data-back><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Back</button><h1>Your plan</h1></div>
+  </div>
+  <div class="scr-body">
+    <h2 class="dk-h" id="poH"></h2>
+    <p class="dk-sub" id="poSub"></p>
+    <div class="dk-stepper">
+      <div><small>Artists or bands</small><b id="artVal"></b></div>
+      <div class="pm"><button id="artMinus" aria-label="Fewer">−</button><button id="artPlus" aria-label="More">+</button></div>
+    </div>
+    <div class="dk-match" id="poCard"></div>
+    <div style="height:14px"></div>
+  </div>
+  <div class="scr-foot"><button class="dk-btn" data-go="paywall">See plans</button></div>
+</section>
+
+<!-- PAYWALL: Choose Your Plan -->
+<section class="scr scr--pay" data-id="paywall">
+  <div class="scr-top">
+    <div class="dk-bar"><button class="dk-back" id="payClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Back</button><h1>Choose Your Plan</h1></div>
+  </div>
+  <div class="scr-body">
+    <div class="dk-ptop">
+      <div class="dk-pproof"><span class="dk-stars5">★★★★★</span><span><b>4.9</b> · 27K ratings</span><i></i><span><b>4M+</b> artists</span></div>
+      <h2 class="dk-payh" id="payH"></h2>
+      
+    </div>
+    <div class="dk-plans" id="planList"></div>
+  </div>
+  <div class="scr-foot">
+    <button class="dk-btn" id="payCta"></button>
+    <div class="dk-legal"><a>Terms of Use</a><a>Privacy</a><a>Restore</a></div>
+  </div>
+</section>
+
+<!-- OFFER: Musician, on leaving -->
+<section class="scr scr--offer sheet" data-id="offer">
+  <div class="scr-top">
+    <div class="dk-ohead">
+      <button class="dk-x" id="offClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      <img src="img/gremlin.png" alt="">
+      <h2 id="offH"></h2>
+      <p id="offSub"></p>
+      <div class="dk-oprice"><b>29,99 €/year</b><span>That's like €2.50 a month</span></div>
+    </div>
+  </div>
+  <div class="scr-body">
+    <div class="dk-cmp" id="offCmp"></div>
+    <div style="height:12px"></div>
+  </div>
+  <div class="scr-foot">
+    <button class="dk-btn" id="offerCta">Choose Musician <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+    <button class="dk-link" id="offNo">No thanks</button>
+  </div>
+</section>
+
+<!-- NOTIFICATIONS: after purchase -->
+<section class="scr" data-id="notify">
+  <div class="scr-top" style="height:96px"></div>
+  <div class="scr-body">
+    <div class="dk-ok"><span class="c"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span>You're on <b id="nPlan"></b></span></div>
+    <div class="dk-ncard">
+      <h2>Don't miss the<br>important stuff</h2>
+      <div class="dk-nstack">
+        <div class="dk-n1"><img src="img/tile.png" alt=""><span id="n1"></span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#1DB954"/><path d="M6.5 9.3c3.6-1 7.6-.7 11 1M7.2 12.3c3-.8 6.3-.5 9.2.9M7.8 15.1c2.4-.6 5-.4 7.3.7" stroke="#000" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
+        <div class="dk-n1"><img src="img/tile.png" alt=""><span>Your song just hit 1,000 streams. Keep it up.</span><svg viewBox="0 0 24 24" fill="none" stroke="#2C9BD6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 15 3.5-3.5 2.5 2.5L17 10M14 10h3v3"/></svg></div>
+        <div class="dk-n1"><img src="img/tile.png" alt=""><span>New earnings have been posted to your account.</span><svg viewBox="0 0 24 24" fill="none" stroke="#9A6BE0" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6l-2 3h-2zM8 8h8c2.5 2.6 4 5.6 4 8.5C20 19 18 20 12 20s-8-1-8-3.5C4 13.6 5.5 10.6 8 8z"/><path d="M12 11v6M10.4 12.4c0-.8.7-1.3 1.6-1.3s1.7.5 1.7 1.3c0 1.6-3.3.9-3.3 2.6 0 .8.8 1.3 1.6 1.3.9 0 1.7-.5 1.7-1.3"/></svg></div>
+      </div>
+    </div>
+  </div>
+  <div class="scr-foot">
+    <button class="dk-btn" data-go="account">Allow notifications</button>
+    <div style="height:10px"></div>
+    <button class="dk-btn ghostw" data-go="account">Not now</button>
+  </div>
+</section>
+
+<!-- ACCOUNT: after purchase -->
+<section class="scr scr--space" data-id="account" data-light="1">
+  <div class="dk-stars"></div>
+  <div class="dk-earth" data-earth></div>
+  <div class="scr-top space-top" style="height:96px"></div>
+  <div class="scr-body" style="text-align:center">
+    <img class="dk-mascot" src="img/gremlin.png" alt="" style="width:66px">
+    <div class="dk-word" style="font-size:24px">DISTRO<span>KID</span></div>
+    <h2 class="dk-wh" style="font-size:29px" id="accH">Last step: your account</h2>
+    <div class="dk-saved" id="accSaved"></div>
+  </div>
+  <div class="scr-foot" style="padding-bottom:150px">
+    <div class="dk-outs">
+      <button class="dk-out" data-go="welcome"><img src="img/google-sign-in-icon.png" alt="">Continue with Google</button>
+      <button class="dk-out" data-go="welcome"><svg viewBox="0 0 24 24" fill="#fff"><path d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.9-1.7 0-3.3 1-4.2 2.5-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9-.1 0-2.9-1.1-2.9-4.2zM13.9 5.2c.7-.9 1.2-2 1-3.2-1 0-2.3.7-3 1.6-.7.8-1.3 2-1.1 3.1 1.2.1 2.3-.6 3.1-1.5z"/></svg>Continue with Apple</button>
+      <button class="dk-out" data-go="welcome"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2" fill="#C7DD16"/><path d="m3 6 9 7 9-7" fill="none" stroke="#050713" stroke-width="1.8"/></svg>Sign up with email</button>
+    </div>
+  </div>
+</section>
+
+        </div>
+      </div>
+    </div>
+    <div class="demo-cap hidden" id="demoCap"><div class="bar"><i id="demoProg"></i></div><p id="demoTxt"></p><button id="demoStop">Stop</button></div>
+    <div class="chips" id="chips"></div>
+    <p class="chiphint">Jump to any screen — answers already filled in.</p>
+    <div class="qr"><img src="img/qr.svg?v=1" alt="QR code for this prototype"><span><b>Open it on your phone</b>Scan to try the flow in your hand.</span></div>
+  </div>
+  <div class="panelcol"><div class="pn" id="panel"></div></div>
+</div>
+</div><!-- /view-proto -->
+
+<script>
+/* ================= their icons, redrawn from the plan cards ================= */
+var IC = {
+  inf:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 12c-2-2.7-3.6-4-5.4-4a4 4 0 0 0 0 8c1.8 0 3.4-1.3 5.4-4zm0 0c2 2.7 3.6 4 5.4 4a4 4 0 0 0 0-8c-1.8 0-3.4 1.3-5.4 4z"/></svg>',
+  spot:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M6.5 9.3c3.6-1 7.6-.7 11 1M7.2 12.3c3-.8 6.3-.5 9.2.9M7.8 15.1c2.4-.6 5-.4 7.3.7" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>',
+  split:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 8h3v8H2zM19 8h3v8h-3zM6 9l4-2.5 3 1.5 3-1.5 2 1.5v6l-4 3-3-2-3-1-2-1z"/></svg>',
+  grid:'<svg viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="3" width="5" height="5" rx="1"/><rect x="9.5" y="3" width="5" height="5" rx="1"/><rect x="17" y="3" width="5" height="5" rx="1"/><rect x="2" y="9.5" width="5" height="5" rx="1"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><rect x="17" y="9.5" width="5" height="5" rx="1"/><rect x="2" y="16" width="5" height="5" rx="1"/><rect x="9.5" y="16" width="5" height="5" rx="1"/><rect x="17" y="16" width="5" height="5" rx="1"/></svg>',
+  p1:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="4" r="2.6"/><path d="M9 8h6v7h-1.5v7h-3v-7H9z"/></svg>',
+  p2:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="7" cy="5" r="2.4"/><circle cx="17" cy="5" r="2.4"/><path d="M4 9h6v6H8.6v6H5.4v-6H4zM14 9h6v6h-1.4v6h-3.2v-6H14z"/></svg>',
+  p3:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="4.5" cy="7" r="2"/><circle cx="12" cy="5" r="2.4"/><circle cx="19.5" cy="7" r="2"/><path d="M2 10.5h5v5H6v5H3.5v-5H2zM9 8.5h6v6.5h-1.4V21h-3.2v-6H9zM17 10.5h5v5h-1v5h-2.5v-5H17z"/></svg>',
+  up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5M6 11l6-6 6 6"/></svg>',
+  mic:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 2.5a5 5 0 0 1 6 6l-3 1.8-4.8-4.8z"/><path d="m12.6 6.6 4.8 4.8L7 21.5 2.5 17z"/></svg>',
+  chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m6 15 4-5 3 3 6-7"/></svg>',
+  label:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><circle cx="12" cy="12" r="3.2" fill="currentColor"/></svg>',
+  cal:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2h2v3H7zM15 2h2v3h-2z"/><path d="M3 5h18v16H3zm2 5v9h14v-9z"/><path d="m12 11.5 1.2 2.4 2.6.4-1.9 1.8.5 2.6-2.4-1.3-2.4 1.3.5-2.6-1.9-1.8 2.6-.4z"/></svg>',
+  price:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 5h20v14H2zm2 2v10h16V7z"/><path d="M11 10h7v1.8h-7zM11 13h7v1.8h-7zM7.6 8.5v1c1 .1 1.7.6 1.8 1.5H8.2c0-.4-.3-.6-.8-.6-.4 0-.7.2-.7.5 0 .8 2.8.3 2.8 2.2 0 .9-.7 1.5-1.9 1.6v1H6.9v-1c-1.1-.1-1.9-.7-1.9-1.7h1.3c0 .5.4.7.9.7.5 0 .8-.2.8-.6 0-.9-2.8-.3-2.8-2.2 0-.8.6-1.4 1.7-1.5v-1z"/></svg>',
+  share:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4l7 6-7 6v-3.5c-5 0-8 1.5-11 6 1-6 4-10 11-10.5z"/></svg>',
+  shield:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 3.5 5v6.5c0 5 3.6 9.3 8.5 10.5 4.9-1.2 8.5-5.5 8.5-10.5V5zm0 2.2V19.8c-3.6-1.1-6.3-4.4-6.3-8.3V6.6z"/></svg>',
+  list:'<svg viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="4" width="3" height="3" rx=".6"/><rect x="7" y="4.5" width="15" height="2" rx="1"/><rect x="2" y="10.5" width="3" height="3" rx=".6"/><rect x="7" y="11" width="15" height="2" rx="1"/><rect x="2" y="17" width="3" height="3" rx=".6"/><rect x="7" y="17.5" width="15" height="2" rx="1"/></svg>',
+  riaa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="3" width="18" height="18" rx="2.5"/><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/></svg>',
+  single:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 3h9v4h-7v10.5A3.5 3.5 0 1 1 10 14.3z"/></svg>',
+  ep:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 4l12-2v13.5a3 3 0 1 1-2-2.8V6.2l-8 1.4v10a3 3 0 1 1-2-2.8z"/></svg>',
+  album:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2.5" y="2.5" width="19" height="19" rx="2"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg>'
+};
+var arrow='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+var tickS='<span class="rd"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>';
+
+/* ================= their three plans, verbatim from Choose Your Plan + the store ================= */
+var PLANS = {
+  m:{ name:'Musician', cta:'Choose Musician', price:'29,99 €/year', like:"That's like €2.50 a month", rank:0,
+      feats:[['inf','Upload unlimited songs and lyrics'],['spot','Spotify registered artist profile','profile'],['split','Create royalty splits','splits'],['grid','21 extra tools included'],['p1','1 artist or band','a1']] },
+  mp:{ name:'Musician+', cta:'Choose Musician Plus', price:'49,99 €/year', like:"That's like €4.17 a month", rank:1, badge:['gold','Most popular'],
+      feats:[['up','Everything in <b>Musician</b>'],['mic','Synced lyrics in Apple Music','lyrics'],['chart','Daily streaming stats','stats'],['label','Customize label name'],['cal','Custom release and preorder dates','date'],['price','Custom iTunes pricing'],['p2','1-2 artists or bands','a2']] },
+  u:{ name:'Ultimate', cta:'Choose Ultimate', price:'99,99 €/year', like:"That's like €8.33 a month", rank:2, badge:['teal','Most features'], ult:true,
+      feats:[['up','Everything in <b>Musician Plus</b>'],['share','1,000 GB instant sharing'],['shield','Monitor your music on Spotify & Apple','monitor'],['list','Search engine for playlist contact info','playlist'],['riaa','RIAA gold & platinum monitoring'],['p3','1–100 artists or bands','a3']] }
+};
+var PK=['m','mp','u'];
+var ARTISTS=[ {k:1,ic:'p1',h:'Just me',s:'One artist name'}, {k:2,ic:'p2',h:'Me and a side project',s:'Two artist names'}, {k:5,ic:'p3',h:'A label or several artists',s:'Three or more'} ];
+var RELEASE=[ {k:'single',ic:'single',h:'A single',s:'One song'}, {k:'ep',ic:'ep',h:'An EP',s:'A few songs'}, {k:'album',ic:'album',h:'An album',s:'A full record'} ];
+/* each want is a line on one of their cards; the card it sits on is the plan it needs */
+var WANTS=[ {k:'profile',ic:'spot',h:'Spotify registered artist profile',p:'m',s:'artist profile'}, {k:'splits',ic:'split',h:'Create royalty splits',p:'m',s:'royalty splits'},
+  {k:'stats',ic:'chart',h:'Daily streaming stats',p:'mp',s:'daily stats'}, {k:'date',ic:'cal',h:'Custom release and preorder dates',p:'mp',s:'your own release date'}, {k:'lyrics',ic:'mic',h:'Synced lyrics in Apple Music',p:'mp',s:'synced lyrics'},
+  {k:'playlist',ic:'list',h:'Search engine for playlist contact info',p:'u',s:'playlist contacts'}, {k:'monitor',ic:'shield',h:'Monitor your music on Spotify & Apple',p:'u',s:'music monitoring'} ];
+function cap1(x){ return x.charAt(0).toUpperCase()+x.slice(1); }
+function joinL(a){ return a.length<2 ? (a[0]||'') : a.slice(0,-1).join(', ')+' and '+a[a.length-1]; }
+var WANT={}; WANTS.forEach(function(w){ WANT[w.k]=w; });
+/* their own published claims (App Store listing) for the loader */
+var FACTS=[ ['4M+','independent artists trust DistroKid'], ['150+','streaming platforms, incl. Spotify, Apple Music, TikTok and YouTube Music'], ['100%','of your earnings stay yours'], ['4.9 ★','from 27K ratings on the App Store'] ];
+
+/* ================= state ================= */
+function defaults(){ return { theme:S0.theme, artists:2, release:'single', wants:['profile','date','stats'], plan:null }; }
+var S0={theme:'light'};
+var S=defaults();
+function relWord(){ return {single:'single',ep:'EP',album:'album'}[S.release]; }
+function artPlan(){ return S.artists>=3 ? 'u' : (S.artists===2 ? 'mp' : 'm'); }
+function rec(){ var r=PLANS[artPlan()].rank; S.wants.forEach(function(k){ r=Math.max(r,PLANS[WANT[k].p].rank); }); return PK[r]; }
+function chosen(){ return S.plan || rec(); }
+function artLabel(n){ return n>=3 ? n+' artists or bands' : (n===2 ? '2 artists or bands' : '1 artist or band'); }
+
+/* ================= earth: their welcome planet, redrawn ================= */
+var EARTH='<svg viewBox="0 0 430 150" preserveAspectRatio="none"><path d="M-20 150 C 40 52, 390 52, 450 150 Z" fill="#024174"/>'
+ +'<path d="M-20 150 C 40 52, 390 52, 450 150" fill="none" stroke="#0A5A9A" stroke-width="3" opacity=".7"/>'
+ +'<path d="M48 108c18-8 58-10 92-6 14 2 10 12-4 14-24 4-50 6-72 4-14-1-26-6-16-12z" fill="#139A72"/>'
+ +'<path d="M168 128c8-4 22-4 26 0 2 4-10 10-20 10-8 0-10-6-6-10z" fill="#139A72"/>'
+ +'<path d="M282 96c24-8 76-6 112 4 12 4 22 18 8 26-20 8-70 6-100-2-22-6-38-20-20-28z" fill="#139A72"/>'
+ +'<path d="M-6 140c20-6 52-6 74 2 4 4-6 10-20 10h-54z" fill="#139A72"/></svg>';
+document.querySelectorAll('[data-earth]').forEach(function(e){ e.innerHTML=EARTH; });
+
+/* ================= builders ================= */
+function opt(icon,h,s,multi){ return '<span class="ic">'+IC[icon]+'</span><span><b>'+h+'</b>'+(s?'<small>'+s+'</small>':'')+'</span>'+tickS; }
+function build(){
+  var a=document.getElementById('artList'); a.innerHTML='';
+  ARTISTS.forEach(function(o){ var b=document.createElement('button'); b.className='dk-opt'; b.dataset.v=o.k; b.innerHTML=opt(o.ic,o.h,o.s);
+    b.onclick=function(){ S.artists=o.k; S.plan=null; syncScreen(); }; a.appendChild(b); });
+  var r=document.getElementById('relList'); r.innerHTML='';
+  RELEASE.forEach(function(o){ var b=document.createElement('button'); b.className='dk-opt'; b.dataset.v=o.k; b.innerHTML=opt(o.ic,o.h,o.s);
+    b.onclick=function(){ S.release=o.k; syncScreen(); }; r.appendChild(b); });
+  var w=document.getElementById('wantList'); w.innerHTML='';
+  WANTS.forEach(function(o){ var b=document.createElement('button'); b.className='dk-opt multi'; b.dataset.v=o.k;
+    b.innerHTML='<span class="ic">'+IC[o.ic]+'</span><span><b style="font-weight:400;color:inherit">'+o.h+'</b></span>'+tickS;
+    b.onclick=function(){ var i=S.wants.indexOf(o.k); if(i>-1) S.wants.splice(i,1); else S.wants.push(o.k); S.plan=null; syncScreen(); }; w.appendChild(b); });
+}
+function cardHTML(k,opts){
+  var p=PLANS[k], h='';
+  if(opts.recBadge) h+='<span class="dk-badge blue">'+(opts.short?'For you':'Recommended for you')+'</span>';
+  else if(p.badge) h+='<span class="dk-badge '+p.badge[0]+'">'+p.badge[1]+'</span>';
+  h+='<div class="dk-pname">'+p.name+'</div><div class="dk-price">'+p.price+'</div><div class="dk-like">'+p.like+'</div>';
+  h+='<div class="dk-feats">'+p.feats.map(function(f){
+      var hit = opts.mark && f[2] && (S.wants.indexOf(f[2])>-1 || f[2]==='a'+(S.artists>=3?3:S.artists));
+      return '<div class="dk-f'+(hit?' hit':'')+'"><span class="fi">'+IC[f[0]]+'</span><span>'+f[1]+'</span>'+(hit?'<span class="you">You</span>':'')+'</div>'; }).join('')+'</div>';
+  return h;
+}
+
+/* ================= everything downstream reads S ================= */
+function syncScreen(){
+  document.querySelectorAll('#artList .dk-opt').forEach(function(b){ var v=+b.dataset.v; b.classList.toggle('on', v===(S.artists>=3?5:S.artists)); });
+  document.querySelectorAll('#relList .dk-opt').forEach(function(b){ b.classList.toggle('on', b.dataset.v===S.release); });
+  document.querySelectorAll('#wantList .dk-opt').forEach(function(b){ b.classList.toggle('on', S.wants.indexOf(b.dataset.v)>-1); });
+  var R=rec(), P=PLANS[R], C=chosen();
+  document.getElementById('wantH').textContent='What do you want with your '+relWord()+'?';
+  document.getElementById('wantHelp').innerHTML='So far that points to <b>'+P.name+'</b>';
+
+  /* loader reads every answer back */
+  var st=document.querySelectorAll('#loadSteps .dk-ls .t');
+  st[0].textContent=artLabel(S.artists);
+  st[1].textContent='Your '+relWord()+' on 150+ platforms';
+  var top=S.wants.slice().sort(function(a,b){ return PLANS[WANT[b].p].rank-PLANS[WANT[a].p].rank; });
+  st[2].textContent= top.length ? cap1(WANT[top[0]].s)+(top.length>1?' + '+(top.length-1)+' more':'') : 'The essentials, nothing extra';
+
+  /* payoff: the card their answers point to, with their answers marked */
+  document.getElementById('poH').textContent=P.name+' fits how you release';
+  var why=S.wants.filter(function(k){ return WANT[k].p===R; }).map(function(k){ return WANT[k].s; });
+  if(artPlan()===R || !why.length) why.push(artLabel(S.artists));
+  document.getElementById('poSub').textContent='Matched on '+joinL(why)+'.';
+  var pc=document.getElementById('poCard'); pc.innerHTML='<div class="dk-card sel">'+cardHTML(R,{mark:true,recBadge:true})+'</div>';
+  document.getElementById('artVal').textContent=artLabel(S.artists);
+
+  /* paywall: their stacked cards, the matched one first and selected */
+  document.getElementById('payH').textContent='Get your '+relWord()+' out with '+P.name;
+  var order=[C].concat([R].concat(PK).filter(function(k,i,a){ return k!==C && a.indexOf(k)===i; }));
+  var pl=document.getElementById('planList'); pl.innerHTML='';
+  order.forEach(function(k){ var b=document.createElement('button'); b.className='dk-card'+(k===C?' sel':' mini'); b.dataset.v=k;
+    b.innerHTML='<span class="rd"><i></i></span>'+cardHTML(k,{mark:k===R,recBadge:k===R,short:k!==C});
+    b.onclick=function(){ S.plan=k; syncScreen(); }; pl.appendChild(b); });
+  var cta=document.getElementById('payCta'); cta.innerHTML=PLANS[C].cta+' '+arrow; cta.classList.toggle('ult',!!PLANS[C].ult);
+
+  /* offer: Musician against the plan they walked away from */
+  var vs = C==='m' ? 'mp' : C;
+  document.getElementById('offH').textContent = C==='m' ? 'Your '+relWord()+' is one tap away' : 'Not ready for '+PLANS[C].name+'?';
+  document.getElementById('offSub').textContent='Start on Musician. Upgrade from the app whenever you need more.';
+  var rows=[['Unlimited songs and lyrics',1,1],['Spotify artist profile',1,1],['Royalty splits',1,1],['21 extra tools',1,1],
+    ['Daily streaming stats',0,1],['Custom release dates',0,1],['Synced lyrics',0,1]];
+  if(vs==='u') rows.push(['Playlist contact search',0,1]);
+  rows.push(['Artists or bands','1',vs==='u'?'1–100':'1-2']);
+  var t='<table><tr><th></th><th class="hl">Musician</th><th>'+PLANS[vs].name+'</th></tr>';
+  rows.forEach(function(r){ function c(v){ return v===1?'<span class="dk-y">✓</span>':(v===0?'<span class="dk-n">—</span>':v); }
+    t+='<tr><td>'+r[0]+'</td><td class="hl">'+c(r[1])+'</td><td>'+c(r[2])+'</td></tr>'; });
+  document.getElementById('offCmp').innerHTML=t+'</table>';
+
+  /* after purchase */
+  document.getElementById('nPlan').textContent=PLANS[S.bought||C].name;
+  document.getElementById('n1').textContent='Your '+(S.release==='single'?'release':relWord())+' is live on Spotify. Check it out!';
+  document.getElementById('accSaved').innerHTML='<b>'+PLANS[S.bought||C].name+'</b>&nbsp; is saved to it';
+}
+
+/* ================= router ================= */
+var ORDER=['welcome','artists','release','wants','loader','payoff','paywall','offer','notify','account'];
+var LABEL={welcome:'Welcome',artists:'Artists',release:'Release',wants:'Wants',loader:'Loader',payoff:'Your plan',paywall:'Choose Your Plan',offer:'Offer on leaving',notify:'Notifications',account:'Account'};
+var scr={}, hist=[], cur='welcome', loadTimers=[];
+document.querySelectorAll('.scr').forEach(function(s){ scr[s.dataset.id]=s; });
+
+function chrome(){ var dark=S.theme==='dark', bar=['artists','release','wants','payoff','paywall','offer'].indexOf(cur)>-1;
+  document.getElementById('sbar').classList.toggle('light',dark || bar || !!scr[cur].dataset.light);
+  document.getElementById('homebar').classList.toggle('light',dark || !!scr[cur].dataset.light); }
+function enter(id){ chrome(); paintChips(); paintPanel(); clearLoad(); if(id==='loader') runLoader(); }
+function go(id,opts){
+  opts=opts||{}; if(id===cur) return;
+  var from=scr[cur], to=scr[id];
+  if(!opts.back) hist.push(cur);
+  if(from){ from.classList.remove('is-active');
+    if(!to.classList.contains('sheet') && !from.classList.contains('sheet')) from.classList.add('is-past'); }
+  if(to.classList.contains('sheet')) from.classList.add('is-active');
+  Object.keys(scr).forEach(function(k){ if(k!==id && !(to.classList.contains('sheet') && k===cur)) scr[k].classList.remove('is-active'); });
+  to.classList.remove('is-past'); to.classList.add('is-active');
+  cur=id; enter(id);
+}
+function back(){
+  if(!hist.length) return;
+  var prev=hist.pop();
+  scr[cur].classList.remove('is-active');
+  scr[prev].classList.remove('is-past'); scr[prev].classList.add('is-active');
+  cur=prev; enter(prev);
+}
+function jump(id){
+  var i=ORDER.indexOf(id);
+  Object.keys(scr).forEach(function(k){ scr[k].classList.add('nofx'); scr[k].classList.remove('is-active','is-past'); });
+  hist=ORDER.slice(0,i<0?0:i);
+  if(id==='offer') scr.paywall.classList.add('is-active');
+  scr[id].classList.add('is-active'); cur=id;
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){
+    Object.keys(scr).forEach(function(k){ scr[k].classList.remove('nofx'); }); }); });
+  syncScreen(); enter(id);
+}
+function paintChips(){
+  var c=document.getElementById('chips');
+  if(!c.children.length) ORDER.forEach(function(id){
+    var b=document.createElement('button'); b.className='chip'+(id==='offer'?' offer':''); b.textContent=LABEL[id];
+    b.dataset.id=id; b.onclick=function(){ stopDemo(); jump(id); }; c.appendChild(b); });
+  c.querySelectorAll('.chip').forEach(function(b){ b.classList.toggle('on', b.dataset.id===cur); });
+}
+function clearLoad(){ loadTimers.forEach(clearTimeout); loadTimers=[]; }
+function runLoader(){
+  var k=demo.on?0.48:1;
+  var steps=[].slice.call(document.querySelectorAll('#loadSteps .dk-ls'));
+  steps.forEach(function(s){ s.classList.remove('on'); });
+  function fact(i){ document.getElementById('fBig').textContent=FACTS[i][0]; document.getElementById('fTxt').textContent=FACTS[i][1]; }
+  fact(0);
+  steps.forEach(function(s,i){ loadTimers.push(setTimeout(function(){ s.classList.add('on'); },(700+i*1000)*k)); });
+  [1,2,3].forEach(function(i){ loadTimers.push(setTimeout(function(){ fact(i); },(1300*i)*k)); });
+  loadTimers.push(setTimeout(function(){ if(cur==='loader') go('payoff'); },5400*k));
+}
+
+/* ================= wiring ================= */
+document.querySelectorAll('[data-go]').forEach(function(b){ b.addEventListener('click',function(){ if(!b.disabled) go(b.dataset.go); }); });
+document.querySelectorAll('[data-back]').forEach(function(b){ b.addEventListener('click',back); });
+document.getElementById('payClose').addEventListener('click',function(){ go('offer'); });
+document.getElementById('payCta').addEventListener('click',function(){ S.bought=chosen(); syncScreen(); go('notify'); });
+document.getElementById('offerCta').addEventListener('click',function(){ S.bought='m'; syncScreen(); go('notify'); });
+document.getElementById('offClose').addEventListener('click',function(){ back(); });
+document.getElementById('offNo').addEventListener('click',function(){ back(); });
+document.getElementById('artMinus').addEventListener('click',function(){ S.artists=Math.max(1,S.artists-1); S.plan=null; syncScreen(); });
+document.getElementById('artPlus').addEventListener('click',function(){ S.artists=Math.min(100,S.artists+1); S.plan=null; syncScreen(); });
+
+function setSeg(id,attr,val){ document.querySelectorAll('#'+id+' button').forEach(function(b){ b.classList.toggle('on', b.dataset[attr]===val); }); }
+function setTheme(th){ S.theme=th; S0.theme=th; document.getElementById('phoneIn').classList.toggle('dark',th==='dark'); setSeg('segTheme','theme',th); chrome(); }
+document.querySelectorAll('#segTheme button').forEach(function(b){ b.addEventListener('click',function(){ setTheme(b.dataset.theme); }); });
+
+/* ================= the 30-second walkthrough ================= */
+var demo={tok:0,on:false,t0:0,iv:null}, finger=document.getElementById('finger'), phoneIn=document.getElementById('phoneIn');
+function W(ms){ return new Promise(function(r){ setTimeout(r,ms); }); }
+function cap(txt){ document.getElementById('demoTxt').textContent=txt; }
+async function tap(sel,tok){
+  if(demo.tok!==tok) throw 0;
+  var el=document.querySelector(sel); if(!el) return;
+  var r=el.getBoundingClientRect(), p=phoneIn.getBoundingClientRect(), z=p.width/phoneIn.offsetWidth||1;
+  finger.style.left=((r.left-p.left+r.width/2)/z)+'px'; finger.style.top=((r.top-p.top+r.height/2)/z)+'px';
+  finger.classList.add('show'); await W(380); if(demo.tok!==tok) throw 0;
+  finger.classList.add('press'); await W(120); finger.classList.remove('press'); el.click(); await W(160);
+  if(demo.tok!==tok) throw 0;
+}
+async function pause(ms,tok){ await W(ms); if(demo.tok!==tok) throw 0; }
+function startDemo(){
+  stopDemo(); var tok=++demo.tok; demo.on=true; demo.t0=Date.now();
+  S=defaults(); S.artists=1; S.wants=['profile']; jump('welcome');
+  document.getElementById('demoCap').classList.remove('hidden');
+  demo.iv=setInterval(function(){ document.getElementById('demoProg').style.width=Math.min(100,(Date.now()-demo.t0)/290)+'%'; },200);
+  (async function(){
+    try{
+      cap('A new artist opens on your welcome screen. No account yet.'); await pause(1500,tok);
+      await tap('#welGo',tok);
+      cap('Three quick taps. First: who they release for.'); await pause(600,tok);
+      await tap('#artList [data-v="2"]',tok); await pause(350,tok); await tap('#artBtn',tok);
+      cap('What they are putting out first.'); await pause(550,tok);
+      await tap('#relList [data-v=ep]',tok); await pause(350,tok); await tap('[data-id=release] .dk-btn',tok);
+      cap('Lines from your own plan cards. Each one points to a plan.'); await pause(550,tok);
+      await tap('#wantList [data-v=date]',tok); await pause(300,tok); await tap('#wantList [data-v=stats]',tok); await pause(500,tok);
+      await tap('[data-id=wants] .dk-btn',tok);
+      cap('Their answers read back, with your own App Store facts.'); await pause(2700,tok);
+      cap('The plan their answers point to, before any price list.'); await pause(1200,tok);
+      await tap('#artPlus',tok); await pause(900,tok); await tap('#artMinus',tok); await pause(600,tok);
+      await tap('[data-id=payoff] .dk-btn',tok);
+      cap('Choose Your Plan opens on their plan, their EP and your 4.9.'); await pause(1700,tok);
+      await tap('#planList [data-v=u]',tok); await pause(700,tok); await tap('#planList [data-v=mp]',tok); await pause(500,tok);
+      cap('They tap Back. Musician, at your own 29,99 €, is the second chance.'); await tap('#payClose',tok); await pause(2400,tok);
+      cap('That is the flow. Notifications and sign-up come after the purchase.');
+      finger.classList.remove('show'); await pause(2200,tok); stopDemo();
+    }catch(e){}
+  })();
+}
+function stopDemo(){ if(!demo.on) return; demo.tok++; demo.on=false; clearInterval(demo.iv); finger.classList.remove('show','press');
+  document.getElementById('demoCap').classList.add('hidden'); }
+document.getElementById('demoBtn').addEventListener('click',startDemo);
+document.getElementById('demoStop').addEventListener('click',stopDemo);
+phoneIn.addEventListener('pointerdown',function(e){ if(e.isTrusted && demo.on) stopDemo(); });
+</script>
+<script>
+/* ---- the short panel: hypothesis + potential outcome, nothing else ---- */
+var PANEL = {
+welcome:{n:1,t:'Move sign-up behind the paywall',
+ hyp:'Try opening on Get started and keeping Log in for existing artists, <b>because today a new artist has to pick Google, Apple or email and type a six-digit code from their inbox before they see a single plan</b>. The account is created after the purchase.',
+ kept:'Your welcome screen — the starfield, the gremlin, the DISTROKID wordmark, “Release your music to the world”, the earth and your outlined buttons.',
+ out:'CR +8% · ARPU +17%'},
+artists:{n:4,t:'Let three taps pick the plan',
+ hyp:'Try asking who they release for, <b>because artist count is the line that separates your three cards — 1 artist, 1-2 artists, 1–100</b>. The icons are the ones on your cards.',
+ kept:'Your blue header bar with Back, your white cards, your person icons and your 8px blue button.',
+ out:'CR +10–15%'},
+release:{n:4,t:'Let three taps pick the plan',
+ hyp:'Try asking what they are putting out first, <b>because “your single” on the next screens reads very differently from “a plan”</b>. It does not change the plan, it changes the words.',
+ kept:'Your header, cards and button.',
+ out:'CR +10–15%'},
+wants:{n:4,t:'Let three taps pick the plan',
+ hyp:'Try offering lines straight from your plan cards, <b>because each one already belongs to one plan — daily stats and your own release date are Musician+, playlist contact search is Ultimate</b>. The line above the button updates as they tap.',
+ kept:'Your feature wording and your feature icons, exactly as on Choose Your Plan.',
+ out:'CR +10–15%'},
+loader:{n:4,t:'Let three taps pick the plan',
+ hyp:'Try reading their answers back while it matches, <b>because a short wait only pays off when something personal comes after it</b>. The facts that rotate are from your own App Store listing.',
+ kept:'Your space background, the gremlin and the earth from the welcome screen.',
+ out:'CR +10–15%'},
+payoff:{n:4,t:'Let three taps pick the plan',
+ hyp:'Try showing the one card their answers point to, with their answers marked, <b>because today everyone reads three cards and 18 lines to work it out alone</b>. Change the artist count and the plan changes with it — it is your own rule, not ours.',
+ kept:'Your plan card exactly — name, price, “That’s like” line, icons and feature wording.',
+ out:'CR +10–15%'},
+paywall:{n:3,t:'Open the plans on their release and your 4.9',
+ hyp:'Try putting the matched plan first and selected, naming their release in a headline and showing your 4.9 and 4M+ artists above the cards, <b>because today all three cards look equal and your strongest proof is only on the App Store</b>.',
+ kept:'Choose Your Plan as it ships — the blue header, all three cards with your Most Popular and Most Features badges, every feature line, every price, and the Ultimate gradient button. The button moves to a fixed footer so it never scrolls away.',
+ out:'CR +15–20%'},
+offer:{n:5,t:'Offer Musician when they leave Musician+',
+ hyp:'Try catching Back with Musician, <b>because today leaving Choose Your Plan simply ends the visit</b>. 29,99 € is your own store price for the Musician SKU, so there is no discount or timer to invent.',
+ kept:'Your blue, your gremlin, your plan wording and your button. The table only uses lines from your own cards.',
+ out:'ARPU +10–15%'},
+notify:{n:2,t:'Ask for notifications after the purchase',
+ hyp:'Try showing this prompt once they have bought, <b>because today it covers the Musician and Musician+ cards while they are comparing them</b>. Asked here, “your release is live on Spotify” is about something they just paid for.',
+ kept:'Your prompt exactly — the headline, the three stacked notifications with the gremlin tile, Allow notifications and Not now.',
+ out:'CR +10–15%'},
+account:{n:1,t:'Move sign-up behind the paywall',
+ hyp:'Try asking for Google, Apple or email here, <b>because now the account has something in it — the plan they just bought</b>. Your two-step code can follow on this screen just as it does today.',
+ kept:'Your space screen and your three sign-up buttons, word for word.',
+ out:'CR +8% · ARPU +17%'}
+};
+function outBlock(lab,val){ return '<div class="pn-out"><div class="lab">'+lab+'</div><div class="v">'+val+'</div></div>'; }
+function paintPanel(){
+  var d=PANEL[cur]; if(!d) return;
+  var h='';
+  if(d.ctx){
+    h += '<div class="pn-n ctx">Context · no change proposed</div><h3 class="pn-t">'+d.t+'</h3><div class="pn-kept">'+d.kept+'</div>';
+  } else {
+    h += '<div class="pn-n">Idea '+d.n+' of 5</div><h3 class="pn-t">'+d.t+'</h3><p class="pn-hyp">'+d.hyp+'</p>'
+       + outBlock('Potential outcome · based on Adapty data', d.out);
+    h += '<div class="pn-kept"><b>Your design, unchanged.</b> '+d.kept+'</div>';
+  }
+  h += '<div class="pn-foot">Ranges are Adapty’s expected effect from tests across 30,000+ subscription apps — not measured lift for DistroKid. '
+     + 'Prices, ratings and plan lines come from your own published material.</div>';
+  document.getElementById('panel').innerHTML = h;
+}
+
+/* ---- views, jumps from the overview ---- */
+function showView(v){
+  if(v!=='proto') stopDemo();
+  document.querySelectorAll('.view').forEach(function(x){ x.classList.remove('on'); });
+  document.getElementById('view-'+v).classList.add('on');
+  document.querySelectorAll('.nav-links button[data-view]').forEach(function(b){ b.classList.toggle('on', b.dataset.view===v); });
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('[data-view]').forEach(function(b){ b.addEventListener('click',function(){ showView(b.dataset.view); }); });
+document.querySelectorAll('.idea[data-jump]').forEach(function(b){ b.addEventListener('click',function(){ showView('proto'); jump(b.dataset.jump); }); });
+document.querySelectorAll('[data-demo]').forEach(function(b){ b.addEventListener('click',function(){ showView('proto'); startDemo(); }); });
+
+build();
+scr.welcome.classList.add('is-active');
+syncScreen(); chrome(); paintChips(); paintPanel();
+if(/[?&]open=proto/.test(location.search)) showView('proto');
+</script>
+</body>
+</html>
